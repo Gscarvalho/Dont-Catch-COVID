@@ -10,7 +10,7 @@ public class Objects_Controller : MonoBehaviour
 
     private void Awake() {
         rb = GetComponent<Rigidbody2D>();
-        f = Random.Range(0.01f,0.4f);
+        f = Random.Range(0.6f,1.5f);
     }
 
     void Update() {

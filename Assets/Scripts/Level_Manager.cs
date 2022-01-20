@@ -1,22 +1,38 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Level_Manager : MonoBehaviour
 {
-    [SerializeField] private GameObject[] objects = new GameObject[0];
-    [SerializeField] private float respawnRate;
-    [HideInInspector] public Vector3 position;
+    public float publicTime;
+    private bool gameIsPlaying;
+    [SerializeField] private Objects_Builder Objects_Builder;
+    [SerializeField] private Player_Controller player_Controller;
+    [SerializeField] private GameObject tutorial;
+    [SerializeField] private GameObject vpTMP;
+    [SerializeField] private GameObject vpTitleTMP;    
 
     private void Start() {
-        InvokeRepeating("MakeObjects",1,respawnRate);
+        publicTime = 10;
     }
-    
-    void MakeObjects() {
-        position.x = Random.Range(-8,8);
-        position.y = 8;
-        position.z = 0;
-
-        Instantiate(objects[Random.Range(0,objects.Length)],position,Quaternion.identity);        
+    private void Update() {
+        if(publicTime > 0) {
+            publicTime -= Time.deltaTime;
+        }else{
+            StopGame(0);
+            ShowScore();
+        }
+    }
+    void StopGame(float s) {
+        publicTime = s;
+        Objects_Builder.CancelInvoke();
+        player_Controller.enabled = false;
+    } 
+    void ShowScore() {
+        Animator anim = vpTMP.GetComponent<Animator>();
+        TextMeshProUGUI text = vpTitleTMP.GetComponent<TextMeshProUGUI>();
+        anim.SetTrigger("gameEnd");
+        text.text = "Final<br>Score";
     }
 }
