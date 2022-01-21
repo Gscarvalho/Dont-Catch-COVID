@@ -11,6 +11,8 @@ public class Level_Manager : MonoBehaviour
     [SerializeField] private Player_Manager player_Manager;
     [Space]
     [SerializeField] private Animator gameMessageAnim;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip[] clips = new AudioClip[0];
     [Space]
     [SerializeField] private GameObject exitButton;
     [SerializeField] private GameObject restartButton;
@@ -38,17 +40,32 @@ public class Level_Manager : MonoBehaviour
             ShowScore();
             if(player_Manager.playerVP > 0) {           
                 ShowMessage(winMessage);
+                if(audioSource.clip != clips[1]) {
+                    audioSource.Stop();
+                    audioSource.clip = clips[1];
+                    audioSource.Play();
+                }   
             }else{
-                ShowMessage(loseTimeMessage); 
+                ShowMessage(loseTimeMessage);
+                if(audioSource.clip != clips[0]) {
+                audioSource.Stop();
+                audioSource.clip = clips[0];
+                audioSource.Play();
+            }
             }
             Debug.Log("A");
         }
         if(player_Manager.publicHP <= 0 && publicTime > 0) {
+            if(audioSource.clip != clips[0]) {
+                audioSource.Stop();
+                audioSource.clip = clips[0];
+                audioSource.Play();
+            }
             gameOver = true;
             StopGame();
             player_Manager.playerVP = 0;
             ShowScore();
-            ShowMessage(loseMessage);            
+            ShowMessage(loseMessage); 
             Debug.Log("B");
         }       
         if(Input.GetKeyDown(KeyCode.Escape)){
