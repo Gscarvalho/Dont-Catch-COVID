@@ -2,37 +2,82 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class Level_Manager : MonoBehaviour
 {
-    public float publicTime;
-    private bool gameIsPlaying;
-    [SerializeField] private Objects_Builder Objects_Builder;
+    [SerializeField] private Objects_Builder objects_Builder;
     [SerializeField] private Player_Controller player_Controller;
+    [SerializeField] private Player_Manager player_Manager;
+    [Space]
+    [SerializeField] private Animator gameMessageAnim;
+    [Space]
+    [SerializeField] private GameObject exitButton;
+    [SerializeField] private GameObject restartButton;
+    [SerializeField] private GameObject winMessage;
+    [SerializeField] private GameObject loseMessage;
+    [SerializeField] private GameObject loseTimeMessage;
+    [Space]
     [SerializeField] private GameObject tutorial;
     [SerializeField] private GameObject vpTMP;
-    [SerializeField] private GameObject vpTitleTMP;    
+    [SerializeField] private GameObject vpTitleTMP;  
+    public bool gameOver = false; 
+    public float publicTime = 10;
 
-    private void Start() {
+    private void OnEnable() {
         publicTime = 10;
     }
     private void Update() {
-        if(publicTime > 0) {
+        if (tutorial.activeInHierarchy == false && publicTime > 0 && !gameOver) {
             publicTime -= Time.deltaTime;
-        }else{
-            StopGame(0);
+            Debug.Log("COUNTING DOWN");
+        }        
+        if(publicTime <= 0) {
+            gameOver = true;
+            StopGame();
             ShowScore();
+            if(player_Manager.playerVP > 0) {           
+                ShowMessage(winMessage);
+            }else{
+                ShowMessage(loseTimeMessage); 
+            }
+            Debug.Log("A");
+        }
+        if(player_Manager.publicHP <= 0 && publicTime > 0) {
+            gameOver = true;
+            StopGame();
+            player_Manager.playerVP = 0;
+            ShowScore();
+            ShowMessage(loseMessage);            
+            Debug.Log("B");
+        }       
+        if(Input.GetKeyDown(KeyCode.Escape)){
+            ExitGame();
         }
     }
-    void StopGame(float s) {
-        publicTime = s;
-        Objects_Builder.CancelInvoke();
+    void StopGame() {
+        objects_Builder.CancelInvoke();
         player_Controller.enabled = false;
+        player_Manager.enabled = false;
+        gameOver = true;
+        Debug.Log("C");
     } 
     void ShowScore() {
         Animator anim = vpTMP.GetComponent<Animator>();
         TextMeshProUGUI text = vpTitleTMP.GetComponent<TextMeshProUGUI>();
         anim.SetTrigger("gameEnd");
-        text.text = "Final<br>Score";
+        gameMessageAnim.SetTrigger("showMessage");        
+        text.text = "Final<br>Score";        
+    }
+    void ShowMessage(GameObject o) {
+        o.SetActive(true);
+        restartButton.SetActive(true);
+        exitButton.SetActive(true);
+    }
+    public void ExitGame() {
+        Application.Quit();
+    }
+    public void ResetGame() {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);        
     }
 }

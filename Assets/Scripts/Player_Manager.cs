@@ -5,11 +5,9 @@ using UnityEngine.UI;
 
 public class Player_Manager : MonoBehaviour
 {
-    public float publicHP;
-    public float publicVP;
-    
+    public float publicHP;    
     private float playerHP;
-    private float playerVP;
+    [HideInInspector]public float playerVP;
 
     [SerializeField] private GameObject HPObject;
     [SerializeField] private Animator playerAnim;
@@ -35,18 +33,8 @@ public class Player_Manager : MonoBehaviour
         }if(playerHP <= 1){
             HPimage.color = new Color32(255,0,4,255);
         }
-
         publicHP = playerHP;
-        publicVP = playerVP;
 
-        #region FOR DEBUG
-        if(Input.GetKeyDown(KeyCode.H)){
-            Debug.Log(publicHP);
-        }
-        if(Input.GetKeyDown(KeyCode.V)){
-        Debug.Log(publicVP);
-        }
-#endregion
     }
     void OnTriggerEnter2D(Collider2D other) {
         if(other.CompareTag("FTM")){

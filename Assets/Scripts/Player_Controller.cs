@@ -8,7 +8,7 @@ public class Player_Controller : MonoBehaviour
     
     [SerializeField] private float speed;    
     [SerializeField] private SpriteRenderer playerSR;
-    [SerializeField] private GameObject tutorialGraphic;
+    [SerializeField] private GameObject tutorial;
 
     void Update() {
         input = Input.GetAxisRaw("Horizontal");
@@ -21,7 +21,7 @@ public class Player_Controller : MonoBehaviour
     }
 
     void FixedUpdate() {
-        if(tutorialGraphic != gameObject.activeInHierarchy) {
+        if(tutorial.activeInHierarchy == false) {
             if(input != 0) {
                 transform.Translate(Vector3.right * input * speed * Time.deltaTime);            
             }

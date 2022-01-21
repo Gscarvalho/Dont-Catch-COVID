@@ -13,8 +13,8 @@ public class Objects_Builder : MonoBehaviour
     }
     
     void MakeObjects() {
-        position.x = Random.Range(-7,7);
-        position.y = 8;
+        position.x = Random.Range(-5,5);
+        position.y = 10;
         position.z = 0;
 
         Instantiate(objects[Random.Range(0,objects.Length)],position,Quaternion.identity);        
