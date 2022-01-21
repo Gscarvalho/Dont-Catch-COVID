@@ -16,11 +16,19 @@ public class Player_Manager : MonoBehaviour
     private RectTransform HP;
     private RawImage HPimage;
 
+    private AudioSource playerAudio;
+
+    public AudioClip[] clips = new AudioClip[0];
+    // 0) FTM plus
+    // 1) COVID
+
     void Start() {
         playerHP = 3;
         playerVP = 0;
         HP = HPObject.GetComponent<RectTransform>();
         HPimage = HPObject.GetComponent<RawImage>();
+        playerAudio = GetComponent<AudioSource>();
+        playerAudio.PlayOneShot(clips[4]);
     }
     
     void Update() {
@@ -38,10 +46,12 @@ public class Player_Manager : MonoBehaviour
     }
     void OnTriggerEnter2D(Collider2D other) {
         if(other.CompareTag("FTM")){
+            playerAudio.PlayOneShot(clips[0]);
             playerVP += 1;
             Destroy(other.gameObject);
         }
         if(other.CompareTag("COVID")){
+            playerAudio.PlayOneShot(clips[1]);
             playerAnim.SetTrigger("isDamaged");
             playerHP -= 1;
             camAnim.SetTrigger("shakeCam");
